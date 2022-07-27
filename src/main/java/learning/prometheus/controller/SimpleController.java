@@ -1,9 +1,11 @@
 package learning.prometheus.controller;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Log4j2
 public class SimpleController {
 
     @GetMapping(path={"/simple/{status}", "/simple/"})
@@ -32,9 +34,14 @@ public class SimpleController {
 
     private ResponseEntity<String> createResponse(Integer statusCode) {
         if (null != statusCode) {
+            if (statusCode > 299) {
+                log.error("HttpStatus Error: {}", statusCode);
+            } else {
+                log.info("Processado GET");
+            }
             return ResponseEntity.status(statusCode).body("RESPONSE");
         }
-
+        log.info("Processado GET");
         return ResponseEntity.ok("RESPONSE");
     }
 }
